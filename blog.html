@@ -1,0 +1,47 @@
+---
+layout: default
+---
+
+<!-- Page Header -->
+<!-- TODO: possibly template this -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-image: url('img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>Kyle Stewart</h1>
+                    <hr class="small">
+                    <span class="subheading">Software Craftsman</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Posts -->
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      {% for post in site.posts %}
+
+        <div class="post-preview">
+            <a href="posts/post.html">
+                <h2 class="post-title">
+                  {{ post.title }}
+                </h2>
+                <h3 class="post-subtitle">
+                  {{ post.brief }}
+                </h3>
+            </a>
+            <p class="post-meta">Posted on {{ post.date | date: "%B %-d, %Y" }}</p>
+        </div>
+
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+<hr>
