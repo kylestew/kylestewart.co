@@ -3,90 +3,17 @@ layout: default
 ---
 
 <!-- Page Header -->
-<!-- Set your background image for this header on the line below. -->
-<header class="intro-header" style="background-image: url('img/hacks-bg.jpg')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="page-heading">
-                    <h1>Hacks</h1>
-                    <hr class="small">
-                    <span class="subheading">The Parts Bin</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
+{% include masthead.html background="hacks-bg.jpg" title="Hacks" subtitle="The Parts Bin" %}
 
 <!-- Main Content -->
 <section id="portfolio">
 <div class="container">
 
-  <div class="row">
-    <div class="col-md-3 portfolio-item">
-      <a href="https://github.com/kylestew/Squarecraft" class="portfolio-link" data-toggle="modal">
-        <div class="portfolio-hover">
-          <div class="portfolio-hover-content">
-            <i class="fa fa-eye fa-3x"></i>
-          </div>
-        </div>
-        <img class="img-responsive img-rounded" src="img/hacks/squarecraft.png" alt="">
-      </a>
-    </div>
-    <div class="col-md-9">
-      <h3>
-        <a href="https://github.com/kylestew/Squarecraft">Squarecraft</a>
-        </h3>
-      <h4>Make your own repeating pixel art wallpaper</h4>
-      <p>
-        This was one of the first apps I put on the App Store that has recently been removed (due to forgetting to pay my Apple account bill). The idea was inspired by an old Mac OS utility that allowed users to draw their own repeating background tiles. I hope to refresh this app soon, in the meantime here it is open sourced on GitHub if anyone wants to run with it.
-      </p>
-    </div>
-  </div>
+  {% include hacks_item.html url="https://github.com/kylestew/Squarecraft" image="squarecraft.png" title="Squarecraft" subtitle="Make your own repeating pixel art wallpaper" description="This was one of the first apps I put on the App Store that has recently been removed (due to forgetting to pay my Apple account bill). The idea was inspired by an old Mac OS utility that allowed users to draw their own repeating background tiles. I hope to refresh this app soon, in the meantime here it is open sourced on GitHub if anyone wants to run with it." %}
 
-    <div class="row">
-      <div class="col-md-3 portfolio-item">
-        <a href="https://github.com/kylestew/HotOrGram" class="portfolio-link" data-toggle="modal">
-          <div class="portfolio-hover">
-            <div class="portfolio-hover-content">
-              <i class="fa fa-eye fa-3x"></i>
-            </div>
-          </div>
-          <img class="img-responsive img-rounded" src="img/hacks/hotornot.png" alt="">
-        </a>
-      </div>
-      <div class="col-md-9">
-        <h3>
-          <a href="https://github.com/kylestew/HotOrGram">HotOrGram</a>
-          </h3>
-        <h4>Instagram and Hot or Not mashup</h4>
-        <p>
-          What happens when you apply the Hot or Not idea on top of Instagram? This is a good start in understanding that. Built in 4 hours, so not perfect.
-        </p>
-      </div>
-    </div>
+  {% include hacks_item.html url="https://github.com/kylestew/HotOrGram" image="hotornot.png" title="HotOrGram" subtitle="Instagram and Hot or Not mashup" description="What happens when you apply the Hot or Not idea on top of Instagram? This is a good start in understanding that. Built in 4 hours, so not perfect." %}
 
-    <div class="row">
-      <div class="col-md-3 portfolio-item">
-        <a href="https://github.com/kylestew/Move" class="portfolio-link" data-toggle="modal">
-          <div class="portfolio-hover">
-            <div class="portfolio-hover-content">
-              <i class="fa fa-eye fa-3x"></i>
-            </div>
-          </div>
-          <img class="img-responsive img-rounded" src="img/hacks/move.png" alt="">
-        </a>
-      </div>
-      <div class="col-md-9">
-        <h3>
-          <a href="https://github.com/kylestew/Move">Move</a>
-          </h3>
-        <h4>Your watch is concerned about your health</h4>
-        <p>
-          Pebble watchface that reminds you to get away from your desk and move your body. Hopefully help diminish the adverse health effects of a programmer's (me) lifestyle.
-        </p>
-      </div>
-    </div>
+  {% include hacks_item.html url="https://github.com/kylestew/Move" image="move.png" title="Move" subtitle="Your watch is concerned about your health" description="Pebble watchface that reminds you to get away from your desk and move your body. Hopefully help diminish the adverse health effects of a programmer's (me) lifestyle." %}
 
   </div>
 </section>
