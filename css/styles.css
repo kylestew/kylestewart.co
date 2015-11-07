@@ -6,29 +6,21 @@
   text-decoration: none;
 }
 
-
 .profile-desc {
   position: relative;
   margin-bottom: 42px;
-  background-color: green;
 }
-.profile-desc .mugshot {
-  background-color: purple;
-}
-.profile-desc .mugshot.profile img {
-  margin: 0 0 0 auto !important;
-}
-@media (min-width: 700px) {
+@media (min-width: 750px) {
   .profile-desc .mugshot.profile img {
-    margin: 0 auto !imporant;
+    margin: 0 0 0 auto !important;
   }
 }
-.profile-desc .bullets {
-  background-color: red;
-}
-
-.profile-info {
-  text-align: center;
-  background-color: red;
-  maring: 0 auto;
+@media (max-width: 750px) {
+  .bullets {
+    text-align: center;
+  }
+  .bullets ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
 }
