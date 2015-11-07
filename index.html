@@ -6,23 +6,38 @@ order: 0
 ---
 
 <!-- Page Header -->
-{% include masthead.html background="portfolio-bg.jpg" title="About Me" subtitle="Mobile | Full Stack | User Experience" %}
+{% include masthead.html background="portfolio-bg.jpg" title="Kyle Stewart" subtitle="Technical Creative" %}
 
     {{% page.title %}}
 
 <!-- Main Content -->
 <div class="container">
-    <div class="row">
-      <div class="profile col-lg-offset-1 col-lg-2">
-        <img class="img-responsive img-circle" src="img/profile.jpg" alt="">
+  <div class="row profile-desc">
+    <div class="profile mugshot col-sm-6">
+      <img class="img-responsive img-circle" src="img/profile.jpg" alt="">
+    </div>
+    <div class="bullets col-sm-6">
+      World
+    </div>
+  </div>
+
+  <!--
+    <div class="profile row">
+      <div class="col-lg-offset-3 col-md-offset-3 col-md-2 col-lg-2">
       </div>
-      <div class="col-lg-7 col-lg-offset-1">
+      <div class="profile-info col-lg-4 col-md-4 col-md-offset-1 col-lg-offset-1">
           <h3>Hello, I'm Kyle</h3>
-          <p>
-            I’m a mobile app developer with an obsession for good design. I’ve been learning to program for 20 years and was on the internet before there were web browsers (maybe I shouldn't admit that). I still take time to keep up with the latest technologies and enjoy learning as much as the day I started. Right now I’m focused on mobile app development because I believe its the future. I’m always looking to find interesting and challenging projects with new technologies because I understand the ultimate goal of technology is to enrich the lives of humans.
-          </p>
+          <ul class="profile-info">
+            <li>Software developer</li>
+            <li><a href="http://pixitesource.com">Full stack web developer</a></li>
+            <li><a href="http://pixiteapps.com">Creative mobile apps</a></li>
+            <li>10+ iOS apps shipped</li>
+            <li><a href="http://kyleRstewart.tumblr.com">Making art with code</a></li>
+            <li>Obsessed with the craft</li>
+          </ul>
       </div>
     </div>
+  -->
 </div>
 
 <section id="portfolio" class="bg-light-gray">
@@ -35,17 +50,13 @@ order: 0
     </div>
     <div class="row">
 
+      {% include portfolio_item.html url="http://assemblyapp.co" image="assembly.png" title="Assembly" subtitle="Developer" %}
+
       {% include portfolio_item.html url="http://pixiteapps.com" image="pixite.png" title="Pixite" subtitle="Developer" %}
 
       {% include portfolio_item.html url="http://storybyte.com" image="storybyte.png" title="Storybyte" subtitle="CTO & iOS Developer" %}
 
       {% include portfolio_item.html url="http://gifmojo.com" image="gifmojo.gif" title="GiFmojo" subtitle="Developer" %}
-
-      {% include portfolio_item.html url="http://pixologyapp.com" image="pixology.png" title="Pixology" subtitle="Developer" %}
-
-      {% include portfolio_item.html url="http://moxieapp.co" image="moxie.png" title="Moxie" subtitle="CEO & Developer" %}
-
-      {% include portfolio_item.html url="https://itunes.apple.com/us/app/pictwo/id532920952?mt=8" image="pictwo.png" title="Pictwo" subtitle="Developer" %}
 
     </div>
   </div>
