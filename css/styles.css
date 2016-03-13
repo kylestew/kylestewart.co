@@ -6,6 +6,10 @@
   text-decoration: none;
 }
 
+.intro-header {
+  margin-bottom: 0;
+}
+
 .profile-desc {
   position: relative;
   margin-bottom: 42px;
