@@ -1,0 +1,55 @@
+.portfolio_grid {
+  // border-top: 12px solid #000;
+  max-width: 1920px;
+  margin: 0 auto;
+
+  .cell {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    background-color: "red";
+
+    @include breakpoint($v-ipad) {
+      width: 50%;
+      float: left;
+    }
+
+    a {
+      display: block;
+
+      img {
+        position: relative;
+        display: block;
+        padding: 0;
+        margin: 0;
+        height: auto;
+      }
+
+      .highlight {
+        z-index: 1;
+        position: absolute;
+        padding: 0; margin: 0;
+        transform: translate3d(0, 0, 0);
+        bottom: 0; left: 0; right: 0; top: 0;
+        background-color: rgba(255,255,255,0.2);
+        opacity: 0;
+      }
+    }
+  }
+}
+
+.no-touchevents {
+  .portfolio_grid {
+    .cell {
+      .highlight {
+        opacity: 0;
+      }
+      :hover {
+        .highlight {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

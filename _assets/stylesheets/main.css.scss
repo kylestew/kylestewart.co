@@ -1,0 +1,60 @@
+@charset "utf-8";
+
+
+$base-font-family: "proxima-nova", Helvetica, Arial, sans-serif;
+$base-font-size:   14px;
+$base-font-weight: 400;
+$base-line-height: 1.5;
+
+$background-color: #ffffff;
+$background-grad-stop-0: #A83279;
+$background-grad-stop-1: #70E1F5;
+
+$text-color:       #3D464C;
+$link-color:       #3D464C; // just make them fatter
+$link-hover-color: #A83279; 
+
+$nav-back-color:   rgba(255, 255, 255, .95);
+
+// responstive breakpoints
+$v-ipad: 700px;
+$v-desktop: 900px;
+
+
+
+
+$small-font-size:  $base-font-size * 0.875;
+$spacing-unit:     30px;
+$grey-color:       #828282;
+$grey-color-light: lighten($grey-color, 40%);
+$grey-color-dark:  darken($grey-color, 25%);
+
+$on-palm:          600px;
+$on-laptop:        800px;
+
+
+
+// Use media queries like this:
+// @include media-query($on-palm) {
+//     .wrapper {
+//         padding-right: $spacing-unit / 2;
+//         padding-left: $spacing-unit / 2;
+//     }
+// }
+@mixin media-query($device) {
+    @media screen and (max-width: $device) {
+        @content;
+    }
+}
+
+
+// Import partials from `sass_dir` (defaults to `_sass`)
+@import
+  "breakpoint",
+  "base",
+  "header",
+  "layout",
+  "bio",
+  "grid",
+  "syntax-highlighting"
+;

@@ -1,0 +1,50 @@
+main {
+  margin-top: 4em;
+}
+
+.wrap_full {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  max-width: none;
+}
+
+.wrap_medium {
+  max-width: 60em;
+  margin: 0 auto;
+  padding: 0;
+  width: span(11 of 12);
+}
+
+.wrap_small {
+  max-width: 50em;
+  margin: 0 auto;
+  padding: 0;
+  width: span(11 of 12);
+}
+
+.text-readable {
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+footer {
+  padding: 6em;
+  position: relative;
+  overflow: hidden;
+  clear: both;
+}
+footer .cat {
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  bottom: -80px;
+  right: 54px;
+  content:url(asset_path("cat.png"));
+
+  @include breakpoint($v-ipad) {
+    height: 200px;
+    width: 200px;
+    bottom: -132px;
+    right: 120px;
+  }
+}

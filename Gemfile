@@ -1,2 +1,16 @@
 source 'https://rubygems.org'
-gem 'github-pages'
+
+
+#
+# jekyll-assets plugin itself
+#
+
+gem "jekyll-assets"
+
+#
+# Additional gems for jekyll-assets
+#
+
+gem "breakpoint"
+gem "uglifier"      # And we want our javascripts to be minified with UglifyJS
+gem "sass"          # And we want to write our stylesheets using SCSS/SASS

@@ -1,37 +1,27 @@
 <header class="site-header">
-  <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header page-scroll">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-          </button>
+  <h1 id="logo">
+    <a href="{{ site.baseurl }}/">
+      Kyle Stewart
+    </a>
+  </h1>
+
+<!--
+    <nav class="site-nav">
+
+      <div class="trigger">
+        <a class="page-link" href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a>
       </div>
 
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-        {% assign pages_list = site.pages | sort: "order" %}
-        {% assign group = 'navigation' %}
-        {% for node in pages_list %}
-          {% if group == null or group == node.group %}
-            {% if page.title == node.title %}
-              <li class="active"><a href="{{node.url}}" class="active">{{node.title}}</a></li>
-            {% else %}
-              <li><a href="{{node.url}}">{{node.title}}</a></li>
-            {% endif %}
-          {% endif %}
-        {% endfor %}
-        {% assign pages_list = nil %}
-        {% assign group = nil %}
-
-          <!-- Static blog link -->
-          <li><a href="https://medium.com/@KyleRStewart">Blog</a></li>
-
+    </nav>
+    <nav class="m-header_nav">
+        <ul class="wrap_small">
+            <li class="page_item page-item-5 current_page_item"><a href="http://www.alexcornell.com/">Projects</a></li>
+<li class="page_item page-item-19"><a href="http://www.alexcornell.com/about/">About</a></li>
+<li class="page_item page-item-21"><a href="http://www.alexcornell.com/writing/">Writing</a></li>
+<li class="page_item page-item-27"><a href="http://www.alexcornell.com/photos/">Photos</a></li>
+<li class="page_item page-item-25"><a href="http://www.alexcornell.com/music/">Music</a></li>
         </ul>
-      </div>
+    </nav>
+  -->
 
-    </div>
-  </nav>
 </header>
