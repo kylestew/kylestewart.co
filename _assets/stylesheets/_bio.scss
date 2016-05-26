@@ -1,20 +1,32 @@
 .bio_header {
-  // background: rgba(255, 0, 0, 0.3);
-
-  padding-top: 3em;
-  padding-bottom: 3em;
+  font-family: "Droid Serif", serif;
+  padding-top: 1em;
+  padding-bottom: 6em;
 
   h1.bio_logo {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+    padding: 0;
     text-align: center;
-    font-size: 4.8em;
+    color: #EFEFEF;
+    overflow: hidden;
+
+    // responsive
+    font-size: 96.7px;
+    letter-spacing: -1px;
     font-weight: 900;
+    line-height: 76.5px;
+
     text-transform: uppercase;
-    letter-spacing: 4.0px;
   }
 
   p.bio_body {
-    font-family: "Droid Serif", serif;
     font-size: 3.0em;
     line-height: 1.47em;
+  }
+
+  .social_links {
+    text-align: right;
+    height: 24px;
   }
 }
