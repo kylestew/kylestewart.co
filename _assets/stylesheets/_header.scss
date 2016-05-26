@@ -17,13 +17,16 @@
     float: left;
     top: 0;
     left: 0;
-    padding-left: 0.8em;
-    padding-right: 0.8em;
     transition: background 0.3s ease-in-out;
     background: #303030;
 
+    svg {
+      position: relative;
+      top: 0.35em;
+    }
+
     &:hover {
-      background: #ff0000;
+      background: $link-hover-color;
     }
 
     a {
@@ -32,6 +35,30 @@
       line-height: 2.5em; // 2 * (1/0.7)
       text-transform: uppercase;
       color: #fff;
+    }
+  }
+
+  ul.social_links {
+    position: absolute;
+    right: 0.6em;
+    @include breakpoint($v-ipad) {
+      right: 1em;
+    }
+
+    margin: 0; padding: 0;
+    list-style-type: none;
+
+    li {
+      display: inline;
+      font-size: 2.4em;
+      line-height: 1.7em;
+
+      a {
+        padding: 0.1em;
+        @include breakpoint($v-ipad) {
+          padding: 0.3em;
+        }
+      }
     }
   }
 }

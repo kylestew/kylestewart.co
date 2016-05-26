@@ -1,32 +1,43 @@
 .bio_header {
-  font-family: "Droid Serif", serif;
-  padding-top: 1em;
-  padding-bottom: 6em;
+  header {
+    padding: 2.6em;
+    padding-top: 3em;
+    padding-bottom: 2em;
+    margin: 0 auto;
+    max-width: 30em;
+
+    font-family: "Droid Serif", serif;
+
+    @include breakpoint($v-ipad) {
+      padding-top: 4em;
+      padding-bottom: 2em;
+      max-width: 40em;
+    }
+    @include breakpoint($v-desktop) {
+      padding-top: 6em;
+      padding-bottom: 4em;
+      max-width: 60em;
+    }
+  }
 
   h1.bio_logo {
-    margin-top: 0.4em;
-    margin-bottom: 0.4em;
-    padding: 0;
-    text-align: center;
-    color: #EFEFEF;
-    overflow: hidden;
-
-    // responsive
-    font-size: 96.7px;
-    letter-spacing: -1px;
-    font-weight: 900;
-    line-height: 76.5px;
-
-    text-transform: uppercase;
+    font-size: 3.0em;
+    @include breakpoint($v-ipad) {
+      font-size: 4.0em;
+    }
+    @include breakpoint($v-desktop) {
+      font-size: 5.0em;
+    }
   }
 
   p.bio_body {
-    font-size: 3.0em;
+    font-size: 1.6em;
     line-height: 1.47em;
-  }
-
-  .social_links {
-    text-align: right;
-    height: 24px;
+    @include breakpoint($v-ipad) {
+      font-size: 2.0em;
+    }
+    @include breakpoint($v-desktop) {
+      font-size: 3.0em;
+    }
   }
 }
