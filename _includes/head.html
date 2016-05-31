@@ -23,28 +23,25 @@
   <meta name="msapplication-TileImage" content="{% asset_path ms-icon-144x144.png %}">
   <meta name="theme-color" content="#ffffff">
 
-  <!-- TODO: OG content -->
   <!-- for Google -->
   <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
   <meta name="keywords" content="art" />
   <meta name="author" content="Kyle Stewart" />
 
-<!-- for Facebook
-<meta property="og:title" content="" />
-<meta property="og:type" content="article" />
-<meta property="og:image" content="" />
-<meta property="og:url" content="" />
-<meta property="og:description" content="" />
--->
+  <!-- for Facebook -->
+  <meta property="og:title" content="Kyle Stewart" />
+  <meta property="og:site_name" content="Kyle Stewart" />
+  <meta property="og:description" content="Kyle Stewart is a technical creative based in San Diego." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="{{ site.url | escape }}{% asset_path 'profile.jpg' %}" />
+  <meta property="og:url" content="{{ site.url | escape }}" />
 
-<!-- for Twitter
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="" />
-<meta name="twitter:description" content="" />
-<meta name="twitter:image" content="" />
--->
-
-
+  <!-- for Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@kylerstewart" />
+  <meta name="twitter:title" content="Kyle Stewart" />
+  <meta name="twitter:description" content="Hi, I'm a technical creative based in San Diego." />
+  <meta name="twitter:image" content="{{ site.url | escape }}{% asset_path 'profile.jpg' %}" />
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
   <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700' rel='stylesheet' type='text/css'>
