@@ -1,6 +1,6 @@
 .bio_header {
   header {
-    padding: 2.6em;
+    padding: 2.2em;
     padding-top: 3em;
     padding-bottom: 2em;
     margin: 0 auto;
@@ -21,7 +21,7 @@
   }
 
   img {
-    width: 60px;
+    width: 56px;
     height: auto;
     float: left;
     margin-right: 0.4em;
@@ -36,7 +36,7 @@
   }
 
   h1.bio_logo {
-    font-size: 3.3em;
+    font-size: 3.0em;
     @include breakpoint($v-ipad) {
       font-size: 4.0em;
     }
