@@ -18,6 +18,14 @@
       padding-bottom: 4em;
       max-width: 60em;
     }
+
+    a.cta {
+      text-decoration: underline;
+      font-size: 1.2em;
+      @include breakpoint($v-desktop) {
+        font-size: 1.5em;
+      }
+    }
   }
 
   img {

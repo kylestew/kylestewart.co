@@ -27,12 +27,7 @@ main {
   font-family: 'Helvetica Neue', sans-serif;
 }
 
-.bio_header {
-  border-bottom: 12px solid $text-color;
-}
-
 footer {
-  border-top: 12px solid $text-color;
   padding: 4em;
   position: relative;
   overflow: hidden;
@@ -55,6 +50,11 @@ footer .cat {
     bottom: -132px;
     right: 120px;
   }
+}
+
+.breath {
+  padding-top: 2em;
+  padding-bottom: 2em;
 }
 
 .four04 {

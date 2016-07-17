@@ -1,6 +1,8 @@
 .portfolio_grid {
-  max-width: 1920px;
+  max-width: 960px;
   margin: 0 auto;
+
+  border-top: 12px solid $text-color;
 
   .cell {
     width: 100%;
@@ -39,6 +41,13 @@
       }
     }
   }
+}
+
+div.bottom-border {
+  clear: both;
+  border-top: 12px solid $text-color;
+  margin: 0 auto;
+  max-width: 960px;
 }
 
 .no-touchevents {
