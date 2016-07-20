@@ -1,3 +1,4 @@
+define(['jquery'], function() {
 
   // Shader Loader will Load any shader you want,
   // And be able to add in large functions ( such as noise )
@@ -196,3 +197,6 @@
   ShaderLoader.prototype.shaderSetLoaded = function(){}
   ShaderLoader.prototype.endLoad = function(){}
   ShaderLoader.prototype.beginLoad = function(){}
+
+  return ShaderLoader;
+});

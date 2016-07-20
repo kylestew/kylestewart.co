@@ -3,17 +3,18 @@
   <style>
     body{ margin: 0px; }
   </style>
+  <script src="../lib/require.js"></script>
+  <script>
+    requirejs.config({
+        baseUrl: '.',
+        paths: {
+          lib: '../lib',
+          jquery: '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min'
+        }
+    });
+    requirejs(['app']);
+  </script>
 </head>
-
-  <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
-  <script src="../lib/three.min.js"></script>
-  <script src="../lib/SubdivisionModifier.js"></script>
-  <script src="../lib/ShaderLoader.js"></script>
-  <script src="../lib/stats.min.js"></script>
-  <script src="../lib/OrbitControls.js"></script>
-
-  <script src="app.js"></script>
-
 <body>
 </body>
 </html>
