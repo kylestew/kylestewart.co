@@ -1,12 +1,11 @@
 define(function(require) {
   require('lib/three.min');
   require('lib/underscore-min');
+  require('lib/dat.gui.min');
   require('lib/stats.min');
   require('lib/OrbitControls');
 
-
-  var scene, camera, renderer;
-  var stats;
+  var scene, camera, renderer, mesh;
   var clock = new THREE.Clock();
 
   var AudioStream = require('lib/AudioStream');
@@ -16,6 +15,7 @@ define(function(require) {
   var shaders = new ShaderLoader('.', '../shaderChunks');
   shaders.shaderSetLoaded = function() {
     init();
+    initGUI();
     animate();
   }
   shaders.load('shader-vert', 'main', 'vertex');
@@ -25,8 +25,11 @@ define(function(require) {
     Time:         { type: "f", value: 0 },
     Color:        { type: "v3", value: new THREE.Vector3(-.7, -.8, -.3) },
     AudioTexture: { type: "t", value: stream.texture },
-    NoisePower:   { type: "f", value: .9 },
-    AudioPower:   { type: "f", value: 1.4 },
+    NoiseSeed:    { type: "v3", value: new THREE.Vector3(-0.1, -0.1, -0.9) },
+    NoiseSize:    { type: "f", value: 1 },
+    NoisePower:   { type: "f", value: .05 },
+    NoiseSpeed:   { type: "f", value: .2 },
+    AudioPower:   { type: "f", value: 0.2 },
   };
 
   function init() {
@@ -48,12 +51,11 @@ define(function(require) {
     // orbit controls
     var orbit = new THREE.OrbitControls(camera, renderer.domElement);
 
-    // fps stats
-    stats = new Stats();
-    document.body.appendChild(stats.dom);
-
     // create a scene
-    var geometry = new THREE.SphereGeometry(200, 3, 1000);
+    // var geometry = new THREE.BoxGeometry(300, 300, 300, 100, 100, 100);
+    // var geometry = new THREE.TorusGeometry(300, 60, 32, 64); // rad, tube diam, rad seg, tube segs
+    // var geometry = new THREE.DodecahedronGeometry(300, 4); // rad, detail
+    var geometry = new THREE.OctahedronGeometry(250, 6); // rad, detail
 
     var material = new THREE.ShaderMaterial({
       uniforms:       uniforms,
@@ -61,13 +63,38 @@ define(function(require) {
       fragmentShader: shaders.fragmentShaders.main,
     });
 
-    var mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.z = Math.PI/2;
-    mesh.scale.y = 5;
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.x = 0.15;
+    mesh.rotation.y = 0.15;
     scene.add(mesh);
 
     // start audio
     stream.play();
+  }
+
+  var params = {
+    color: "#0b1066",
+    noiseSize: 1.0,
+    noisePower: 0.08,
+    noiseSpeed: 0.2,
+    audioPower: 0.2,
+  }
+
+  var stats;
+  function initGUI() {
+    // fps stats
+    stats = new Stats();
+    document.body.appendChild(stats.dom);
+
+    // GUI
+    var gui = new dat.GUI();
+    gui.addColor(params, 'color');
+    gui.add(params, 'noiseSize', 0, 6);
+    gui.add(params, 'noisePower', 0, 0.5);
+    gui.add(params, 'noiseSpeed', 0, 0.5);
+    gui.add(params, 'audioPower', 0, 0.5);
+
+    // gui.close();
   }
 
   window.addEventListener('resize', onWindowResize, false);
@@ -82,7 +109,23 @@ define(function(require) {
     stats.begin();
 
     stream.update();
+
+    // slowly rotate
+    mesh.rotation.y += 0.001;
+
+    // update time
     uniforms.Time.value += clock.getDelta();
+
+    // slowly walk the noise landscape
+    uniforms.NoiseSeed.value.x = ( Math.sin( uniforms.Time.value / 100.0 ) -1.0 ) / 2;
+    uniforms.NoiseSeed.value.y = ( Math.sin( uniforms.Time.value / 100.0 ) -1.0 ) / 2;
+
+    // bind latest GUI settings
+    uniforms.Color.value = new THREE.Color(params.color);
+    uniforms.NoiseSize.value = params.noiseSize;
+    uniforms.NoisePower.value = params.noisePower;
+    uniforms.NoiseSpeed.value = params.noiseSpeed;
+    uniforms.AudioPower.value = params.audioPower;
 
     renderer.render(scene, camera);
 

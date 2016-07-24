@@ -1,34 +1,54 @@
+/*
+  Based off https://github.com/cabbibo/wombs/blob/gh-pages/audioSketches/thing/app.js
+  I understand about half of it :/
+*/
 
-uniform float Time;
+uniform float     Time;
 uniform sampler2D AudioTexture;
-uniform float NoisePower;
-uniform float AudioPower;
+uniform float     NoiseSize;
+uniform float     NoisePower;
+uniform float     NoiseSpeed;
+uniform float     AudioPower;
 
-varying vec3 vNPos;
+varying vec2 vUv;
+varying vec3 vPos;
 varying float vDisplacement;
 
 $simplex
 
+vec3 absAudioPosition(sampler2D t ,vec3 p) {
+  vec3 nPos = normalize(p);
+  nPos.x = length( texture2D( t , vec2( abs(nPos.x) , 0.0 ) ) );
+  nPos.y = length( texture2D( t , vec2( abs(nPos.y) , 0.0 ) ) );
+  nPos.z = length( texture2D( t , vec2( abs(nPos.z) , 0.0 ) ) );
+  return nPos;
+}
+
 void main() {
 
-  // use some normal thing for position into noise
-  // TODO: what is this?
-  vNPos = normalize(position);
-  vec3 offset;
-  offset.x = vNPos.x + Time * .3;
-  offset.y = vNPos.y + Time * .2;
-  offset.z = vNPos.z + Time * .24;
-  // ??? huh
-  vec2 a = vec2(abs(vNPos.y), 0.);
+  vUv = uv;
+  vPos = position;
 
-  // use combo of audio texture and noise to determine vertex displacement
-  float audio = texture2D(AudioTexture, a).r;
-  vDisplacement = NoisePower * snoise(offset);
-  vDisplacement += AudioPower * audio * audio;
-
-  // diplace vertex
   vec3 pos = position;
-  pos *= .1 * abs(vDisplacement + 3.0);
+
+  // use time to determine position to sample noise
+  vec3 nPos = normalize(position);
+  vec3 offset;
+  offset.x = nPos.x + cos(Time * NoiseSpeed);
+  offset.y = nPos.y + sin(Time * NoiseSpeed);
+  offset.z = nPos.z;
+  offset *= NoiseSize;
+  float dNoise = snoise(offset);
+
+  // use audio texture to determine another noise sample point
+  vec3 audioPosition = absAudioPosition(AudioTexture, position);
+  float dAudio = snoise(audioPosition);
+
+  // combine noise samples to determine displacement
+  vDisplacement = length(audioPosition * AudioPower) + (dNoise * NoisePower) + .8;
+
+  // diplace vertex with final value
+  pos *= vDisplacement;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);
 }
