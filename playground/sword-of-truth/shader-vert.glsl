@@ -36,7 +36,7 @@ void main() {
   vec3 offset;
   offset.x = nPos.x + cos(Time * NoiseSpeed);
   offset.y = nPos.y + sin(Time * NoiseSpeed);
-  offset.z = nPos.z;
+  offset.z = nPos.z + sin(Time * NoiseSpeed);
   offset *= NoiseSize;
   float dNoise = snoise(offset);
 
@@ -45,7 +45,7 @@ void main() {
   float dAudio = snoise(audioPosition);
 
   // combine noise samples to determine displacement
-  vDisplacement = length(audioPosition * AudioPower) + (dNoise * NoisePower) + .8;
+  vDisplacement = length(audioPosition * AudioPower) - (dNoise * NoisePower) + .8;
 
   // diplace vertex with final value
   pos *= vDisplacement;

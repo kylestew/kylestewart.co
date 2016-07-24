@@ -11,15 +11,11 @@ $kali
 
 void main() {
 
-  vec3 nPos = normalize(vPos);
+  vec3 nPos = .4 * normalize(vPos);
+  vec3 normalColor = normalize(Color);
   vec3 c = kali3(nPos, NoiseSeed);
-  vec3 cN = normalize(normalize(c) + 3.0 * Color);
+  vec3 cN = normalize(normalize(c) + 3.0 * Color + 1.0 * nPos);
 
-  gl_FragColor = vec4(cN * ((vDisplacement - .5) / (NoisePower * 2.0)), 1.0);
-
-  // vec3 color = abs(Color + .3 * abs(vNPos) + vDisplacement);
-  // vec3 normalColor = normalize(Color);
-  // color += .1 * kali3(vNPos, -1. * normalColor);
-  // gl_FragColor = vec4(normalize(color) * vDisplacement, 1.);
+  gl_FragColor = vec4(cN * ((vDisplacement - .5) / 0.4), 1.0);
 
 }

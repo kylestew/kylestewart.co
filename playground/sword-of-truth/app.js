@@ -117,8 +117,8 @@ define(function(require) {
     uniforms.Time.value += clock.getDelta();
 
     // slowly walk the noise landscape
-    uniforms.NoiseSeed.value.x = ( Math.sin( uniforms.Time.value / 100.0 ) -1.0 ) / 2;
-    uniforms.NoiseSeed.value.y = ( Math.sin( uniforms.Time.value / 100.0 ) -1.0 ) / 2;
+    uniforms.NoiseSeed.value.x = ( 0.5 * Math.sin( uniforms.Time.value / 50.0 ) +0.7 ) / -2;
+    uniforms.NoiseSeed.value.y = ( 0.5 * Math.sin( uniforms.Time.value / 50.0 ) +0.7 ) / -2;
 
     // bind latest GUI settings
     uniforms.Color.value = new THREE.Color(params.color);
