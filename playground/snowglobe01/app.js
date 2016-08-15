@@ -4,84 +4,118 @@ define(function(require) {
   require('lib/stats.min');
   require('lib/OrbitControls');
 
+  /* TODO TODO TODO
+  * - Starfield
+  * - Day night texture cycles for skybox
+  * - Height mapped terrain
+  * - Animate camera rotation timed
+  * - Animate terrain?
+  */
+
   // constants
   // SCALE: meters
   const PLANE_SIZE = 12;
   const SUN_MOON_RADIUS = 14;
-  const DAY_NIGHT_SPEED = 0.4;
-  const SUN_MOON_LIGHT_DISTANCE = 20;
-  const SUN_MOON_LIGHT_DECAY = 0;
-  const SUN_LIGHT_INTENSITY = 1.5;
-  const MOON_LIGHT_INTENSITY = 0.5;
-  const AMBIENT_MULT = 3.0;
+  const DAY_NIGHT_ANIMATION_TIME = 24;
+  const SUN_LIGHT_INTENSITY = 0.8;
+  const MOON_LIGHT_INTENSITY = 0.4;
 
   // scene objects
   var plane;
   var ambient;
-  var sun, moon;
+  var sun, sunLight;
+  var moon, moonLight;
 
   function makeScene() {
-    // TODO: deformable geometry
-    var geometry = new THREE.PlaneGeometry(PLANE_SIZE, PLANE_SIZE, 64, 64);
-    var material = new THREE.MeshLambertMaterial({ color: 0x333399 })
+    // terrain geometry
+    var geometry = new THREE.PlaneGeometry(PLANE_SIZE, PLANE_SIZE, 32, 32);
+
+    // heightmap terrain
+    geometry.vertices.map(function (vertex) {
+      vertex.x += -.5 + Math.random() / 10;
+      vertex.y += -.5 + Math.random() / 10;
+      vertex.z = -.5 + Math.random() / 5;
+      return vertex;
+    });
+    geometry.computeFaceNormals();
+
+    var material = new THREE.MeshPhongMaterial({
+      color: 0xe71fe8,
+      specular: 0x1aeaf1,
+      emissive: 0x030c27,
+      shininess: 44,
+      shading: THREE.FlatShading
+    });
     plane = new THREE.Mesh(geometry, material);
     plane.rotation.x = -Math.PI/2;
     scene.add(plane);
 
-    // TEMP
+    // terrain lines
     var mat = new THREE.LineBasicMaterial({
-      color: 0xffffff,
+      color: 0x030c27,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.1
     });
     var lines = new THREE.LineSegments(geometry, mat);
     lines.rotation.x = -Math.PI/2;
-    scene.add(lines);
-
-    // dynamic ambient lighting
-    ambient = new THREE.AmbientLight(0x404040);
-    scene.add(ambient);
+    // scene.add(lines);
 
     // sun / moon
     sun = new THREE.Object3D();
+    scene.add(sun);
 
-    geometry = new THREE.SphereGeometry(2, 32, 32);
-    var sunMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({
-      emissive: 0xdddd00,
-      roughness: 0.6,
-      metalness: 0.4,
+    geometry = new THREE.IcosahedronGeometry(3, 2);
+    var sunMesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
+      color: 0x995d16,
+      emissive: 0xd07f1f,
+      specular: 0xeeeeee,
+      shininess: 20,
+      shading: THREE.FlatShading,
+      fog: false,
     }));
     sun.add(sunMesh);
 
-    var sunLight = new THREE.PointLight(0xffffdd, SUN_LIGHT_INTENSITY, SUN_MOON_LIGHT_DISTANCE, SUN_MOON_LIGHT_DECAY);
+    sunLight = new THREE.DirectionalLight(0xbfc0d0, SUN_LIGHT_INTENSITY);
     sun.add(sunLight);
-
-    scene.add(sun);
+    // scene.add(new THREE.DirectionalLightHelper(sunLight, 1));
 
     moon = new THREE.Object3D();
-    var moonMesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({
-      emissive: 0x666666,
-      roughness: 0.6,
-      metalness: 0.4,
+    scene.add(moon);
+
+    var moonMesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
+      color: 0x666666,
+      specular: 0xeeeeee,
+      shininess: 10,
+      shading: THREE.FlatShading,
+      fog: false,
     }));
     moon.add(moonMesh);
 
-    var moonLight = new THREE.PointLight(0xffffff, MOON_LIGHT_INTENSITY, SUN_MOON_LIGHT_DISTANCE, SUN_MOON_LIGHT_DECAY);
+    moonLight = new THREE.DirectionalLight(0xa4c4e7, MOON_LIGHT_INTENSITY);
     moon.add(moonLight);
+    // scene.add(new THREE.DirectionalLightHelper(moonLight, 1));
 
-    scene.add(moon);
+    // EFFECTS
+    // enable fog
+    scene.fog = new THREE.FogExp2( 0xefd1b5, 0.07 );
   }
 
   function animate() {
     requestAnimationFrame(animate);
     stats.begin();
 
+    // animation time from 0 to 2PI
+    var theta = Math.linMap(clock.getElapsedTime() % DAY_NIGHT_ANIMATION_TIME, 0, DAY_NIGHT_ANIMATION_TIME, 0, 2 * Math.PI);
+
     // sun/moon cycle
-    sun.position.x = SUN_MOON_RADIUS * Math.sin(clock.getElapsedTime() * DAY_NIGHT_SPEED);
-    sun.position.y = SUN_MOON_RADIUS * Math.cos(clock.getElapsedTime() * DAY_NIGHT_SPEED);
-    moon.position.x = SUN_MOON_RADIUS * Math.sin(Math.PI + clock.getElapsedTime() * DAY_NIGHT_SPEED);
-    moon.position.y = SUN_MOON_RADIUS * Math.cos(Math.PI + clock.getElapsedTime() * DAY_NIGHT_SPEED);
-    ambient.intensity = Math.abs(AMBIENT_MULT * Math.cos(clock.getElapsedTime() * DAY_NIGHT_SPEED));
+    sun.position.x = SUN_MOON_RADIUS * Math.sin(theta);
+    sun.position.y = SUN_MOON_RADIUS * Math.cos(theta);
+    sun.rotation.z = -Math.sin(theta);
+    moon.position.x = SUN_MOON_RADIUS * Math.sin(theta - Math.PI);
+    moon.position.y = SUN_MOON_RADIUS * Math.cos(theta - Math.PI);
+    moon.rotation.z = -Math.sin(theta - Math.PI);
+
+    // ambient.intensity = Math.abs(AMBIENT_MULT * Math.cos(clock.getElapsedTime() * DAY_NIGHT_SPEED));
 
 
     renderer.render(scene, camera);
@@ -124,28 +158,15 @@ define(function(require) {
     document.body.appendChild(stats.dom);
   }
 
+  // some helpers
+  Math.radians = function(degrees) {
+    return degrees * Math.PI / 180;
+  }
+  Math.linMap = function(n, start1, stop1, start2, stop2) {
+    return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
+  };
 
-//  var AudioStream = require('lib/AudioStream');
-//  var stream = new AudioStream('../audio/MS_01.mp3'); // AUDIO FILE
-
-  // var ShaderLoader = require('lib/ShaderLoader')
-  // var shaders = new ShaderLoader('.', '../shaderChunks');
-  // shaders.shaderSetLoaded = function() {
-
-    //stream.play(); // start audio
-
-    initThree();
-    makeScene();
-    animate();
-  // }
-  // shaders.load('shader-vert', 'main', 'vertex');
-  // shaders.load('shader-frag', 'main', 'fragment');
-
-  // var uniforms = {
-    // t_audio: {
-    //   type: "t",
-    //   value: stream.texture
-    // }
-  // };
-
+  initThree();
+  makeScene();
+  animate();
 });
