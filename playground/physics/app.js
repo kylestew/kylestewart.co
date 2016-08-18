@@ -9,7 +9,7 @@ define(function(require) {
   var clock = new THREE.Clock();
   var stats;
 
-  var SIZE = 640;
+  var SIZE = 256;
   var simulation;
 
   var simulationUniforms = {
@@ -60,6 +60,9 @@ define(function(require) {
     simulation.setUniforms(simulationUniforms);
     simulation.addBoundTexture(renderUniforms.t_pos , 'output');
     simulation.resetRand(5);
+
+    simulation.addDebugScene(scene);
+    simulation.debugScene.scale.multiplyScalar(.1);
   }
 
   function createLookupGeometry(size) {
@@ -81,7 +84,7 @@ define(function(require) {
     requestAnimationFrame(animate);
     stats.begin();
 
-    simulationUniforms.dT.value = clock.getDelta();
+    simulationUniforms.dT.value = clock.getDelta() * 0.1;
     simulation.update();
 
     renderer.render(scene, camera);
