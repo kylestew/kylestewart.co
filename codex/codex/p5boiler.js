@@ -1,6 +1,6 @@
 define(['p5', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/filesaver.min'], function(p5, _, stats, blob, fs) {
 
-  function p5boiler(frameRate, awake, setupUI, setup, draw) {
+  function p5boiler(frameRate, setup, setupUI, reset, draw) {
 
     this.sketch = function(_p5) {
 
@@ -14,14 +14,14 @@ define(['p5', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/f
         self.stats = new stats();
         document.body.appendChild(self.stats.dom);
 
-        awake(_p5);
-        setupUI(self, _p5);
         setup(_p5);
+        setupUI(self, _p5);
+        reset(_p5);
       };
 
       _p5.windowResized = function() {
         _p5.resizeCanvas(_p5.windowWidth, _p5.windowHeight);
-        setup(_p5);
+        reset(_p5);
       }
 
       _p5.draw = function() {
@@ -32,11 +32,11 @@ define(['p5', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/f
         this.stats.end();
       }
 
-      this.addApplyToGUI = function(gui, params) {
-        params.apply = function() {
-          setup(_p5);
+      this.addResetToGUI = function(gui, params) {
+        params.reset = function() {
+          reset(_p5);
         }
-        gui.add(params, 'apply');
+        gui.add(params, 'reset');
       };
 
       this.addSaveToGUI = function(gui, params) {
