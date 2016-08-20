@@ -1,0 +1,21 @@
+<html>
+<head>
+  <style>
+    body{ margin: 0px; }
+  </style>
+  <script src="../lib/require.js"></script>
+  <script>
+    requirejs.config({
+        baseUrl: '.',
+        paths: {
+          lib: '../lib',
+          shared: '../../shared',
+          jquery: '//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min',
+        }
+    });
+    requirejs(['app']);
+  </script>
+</head>
+<body>
+</body>
+</html>
