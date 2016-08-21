@@ -1,0 +1,44 @@
+.codex-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 8px;
+  padding-bottom: 6px;
+  padding-left: 12px;
+  padding-right: 14px;
+
+  font-family: "Droid Serif", serif;
+  font-size: 18px;
+
+  z-index: 1000;
+
+  transition: background 0.3s ease-in-out;
+  background: rgba(0,0,0,0.1);
+}
+.codex-header:hover {
+  background: #A83279;
+}
+.codex-header a {
+  text-decoration: none;
+  color: #212427;
+}
+.codex-header span {
+  padding-left: 6px;
+  vertical-align: top;
+}
+.codex-header svg #Diode {
+  stroke: #000000;
+}
+
+.codex-dark {
+  background: #000000;
+}
+.codex-dark .codex-header {
+  background: rgba(255,255,255,0.1);
+}
+.codex-dark .codex-header a {
+  color: #ffffff;
+}
+.codex-dark .codex-header a svg #Diode {
+  stroke: #ffffff;
+}

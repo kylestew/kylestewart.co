@@ -43,9 +43,9 @@ define(function(require) {
   }
 
   var draw = function(p5) {
-    p5.background(0);
+    p5.background(200, 255, 255);
     p5.strokeWeight(1);
-    p5.stroke(255);
+    p5.stroke(0);
     p5.noFill();
 
     // center drawing
