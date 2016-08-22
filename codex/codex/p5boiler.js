@@ -11,8 +11,10 @@ define(['p5', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/f
         canvas.id("renderCanvas"); // for image saver
         _p5.frameRate(frameRate);
 
-        // self.stats = new stats();
-        // document.body.appendChild(self.stats.dom);
+        // create stats window bottom left
+        self.stats = new stats();
+        self.stats.dom.style.cssText="position:fixed;bottom:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";
+        document.body.appendChild(self.stats.dom);
 
         setup(_p5);
         setupUI(self, _p5);
@@ -25,11 +27,11 @@ define(['p5', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/f
       }
 
       _p5.draw = function() {
-        // this.stats.begin();
+        this.stats.begin();
 
         draw(_p5);
 
-        // this.stats.end();
+        this.stats.end();
       }
 
       this.addResetToGUI = function(gui, params) {

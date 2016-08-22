@@ -1,6 +1,5 @@
 define(function(require) {
   require('lib/dat.gui.min');
-  var Superformula = require('codex/superformula');
 
   var drawWidth, drawHeight;
   var counts;
