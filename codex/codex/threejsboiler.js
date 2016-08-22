@@ -8,12 +8,10 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
     return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
   };
 
-  function threejsboiler(frameRate, makeScene, animate) {
-
+  function threejsboiler(frameRate, setup, createUI, resetScene, animate) {
     // prep scene and camera
     var w = window.innerWidth;
     var h = window.innerHeight;
-
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(50, w/h, 0.1, 1000000);
     this.camera.position.set(194.27, 91.54, 194.24);
@@ -24,17 +22,19 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
     this.renderer.setSize(w, h);
     this.renderer.setPixelRatio(window.devicePixelRatio || 1);
     this.renderer.setClearColor(new THREE.Color(0x000000));
+    this.renderer.domElement.id = "renderCanvas";
     document.body.appendChild(this.renderer.domElement);
 
     // resize event
+    var self = this;
     window.addEventListener('resize', function() {
-      this.camera.aspect = window.innerWidth / window.innerHeight;
-    	this.camera.updateProjectionMatrix();
-    	this.renderer.setSize( window.innerWidth, window.innerHeight );
+      self.camera.aspect = window.innerWidth / window.innerHeight;
+    	self.camera.updateProjectionMatrix();
+    	self.renderer.setSize( window.innerWidth, window.innerHeight );
     }, false);
 
     // orbit controls
-    var orbit = new THREE.OrbitControls(camera, renderer.domElement);
+    var orbit = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
     // stats
     this.stats = new stats();
@@ -43,22 +43,56 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
 
     // setup
     this.clock = new THREE.Clock();
-    makeScene();
-    
-    this.renderFrame = function() {
-      requestAnimationFrame(this.renderFrame);
-      this.stats.begin();
-
-      animate();
-
-      this.renderer.render(this.scene, this.camera);
-
-      this.stats.end();
-    }
+    setup();
+    createUI(this);
+    resetScene(this.scene, this.renderer);
 
     // run!
-    renderFrame();
+    this.resetScene = resetScene;
+    this.animate = animate;
+    this.renderFrame();
+
+    this.self = this;
   }
+
+  threejsboiler.prototype._reset = function() {
+    this.clock = new THREE.Clock();
+
+    // clear out scene
+    this.scene = new THREE.Scene();
+
+    this.resetScene(this.scene, this.renderer);
+  }
+
+  threejsboiler.prototype.renderFrame = function() {
+    requestAnimationFrame(this.renderFrame.bind(this));
+    this.stats.begin();
+
+    this.animate(this.scene);
+
+    this.renderer.render(this.scene, this.camera);
+
+    this.stats.end();
+  }
+
+  threejsboiler.prototype.addResetToGUI = function(gui, params) {
+    var self = this;
+    params.reset = function() {
+      self._reset();
+    }
+    gui.add(params, 'reset');
+  }
+  /*
+  threejsboiler.prototype.addSaveToGUI = function(gui, params) {
+    params.save = function() {
+      var canvas = document.getElementById("renderCanvas"), ctx = canvas.getContext("2d");
+      canvas.toBlob(function(blob) {
+        saveAs(blob, "output.png");
+      });
+    }
+    gui.add(params, 'save');
+  };
+  */
 
   return threejsboiler;
 

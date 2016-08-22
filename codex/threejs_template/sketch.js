@@ -1,14 +1,29 @@
 define(function(require) {
+  require('lib/dat.gui.min');
 
   // constants
-  const CUBE_SIZE = 100;
+  const PLANE_SIZE = 200;
 
   // scene objects
   var box;
 
-  function makeScene() {
+  var params = {
+    size: 100,
+  };
+  function createUI(sketch) {
+    var gui = new dat.GUI();
+
+    gui.add(params, 'size').min(10).max(400);
+
+    sketch.addResetToGUI(gui, params);
+  }
+
+  function setup() {
+  }
+
+  function resetScene(scene, renderer) {
     // Plane
-    var geometry = new THREE.PlaneGeometry(200, 200, 1, 1);
+    var geometry = new THREE.PlaneGeometry(PLANE_SIZE, PLANE_SIZE, 1, 1);
     var material = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       roughness: 0.5,
@@ -22,7 +37,7 @@ define(function(require) {
     scene.add(plane);
 
     // Box
-    geometry = new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, 1, 1, 1);
+    geometry = new THREE.BoxGeometry(params.size, params.size, params.size, 1, 1, 1);
     material = new THREE.MeshStandardMaterial({
       color: 0xFF57A1,
       roughness: 0.5,
@@ -58,5 +73,5 @@ define(function(require) {
   }
 
   var threejsboiler = require('codex/threejsboiler');
-  var sketch = threejsboiler(60, makeScene, animate);
+  var sketch = new threejsboiler(60, setup, createUI, resetScene, animate);
 });
