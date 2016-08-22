@@ -18,7 +18,10 @@ define(function(require) {
     sketch.addResetToGUI(gui, params);
   }
 
-  function setup() {
+  function setup(scene, camera) {
+    camera.fov = 50;
+    camera.position.set(194.27, 91.54, 194.24);
+    camera.rotation.set(Math.radians(-26.57), Math.radians(41.81), Math.radians(18.43));
   }
 
   function resetScene(scene, renderer) {
@@ -73,5 +76,5 @@ define(function(require) {
   }
 
   var threejsboiler = require('codex/threejsboiler');
-  var sketch = new threejsboiler(60, setup, createUI, resetScene, animate);
+  var sketch = new threejsboiler(setup, createUI, resetScene, animate);
 });

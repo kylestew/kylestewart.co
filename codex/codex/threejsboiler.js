@@ -1,4 +1,4 @@
-define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitControls', 'lib/canvas-toBlob', 'lib/filesaver.min'], function(threejs, _, stats, orbit, blob, fs) {
+define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitControls', 'lib/canvas-toBlob', 'lib/filesaver.min', 'lib/ShaderLoader'], function(threejs, _, stats, orbit, blob, fs, ShaderLoader) {
 
   // some helpers
   Math.radians = function(degrees) {
@@ -8,14 +8,18 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
     return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
   };
 
-  function threejsboiler(frameRate, setup, createUI, resetScene, animate) {
+  function threejsboiler(setup, createUI, resetScene, animate, loadShaders) {
+    this.self = this;
+    this.setup = setup;
+    this.createUI = createUI;
+    this.resetScene = resetScene;
+    this.animate = animate;
+
     // prep scene and camera
     var w = window.innerWidth;
     var h = window.innerHeight;
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(50, w/h, 0.1, 1000000);
-    this.camera.position.set(194.27, 91.54, 194.24);
-    this.camera.rotation.set(Math.radians(-26.57), Math.radians(41.81), Math.radians(18.43));
+    this.camera = new THREE.PerspectiveCamera(65, w/h, 0.1, 1000000);
 
     // prep renderer
     this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -41,18 +45,25 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
     this.stats.dom.style.cssText="position:fixed;bottom:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";
     document.body.appendChild(this.stats.dom);
 
-    // setup
+    if (loadShaders) {
+      this.shaders = new ShaderLoader('.', '../codex/shaderchunks');
+      this.shaders.shaderSetLoaded = function() {
+        self._run();
+      }
+      loadShaders(this.shaders);
+    } else {
+      this._run();
+    }
+  }
+
+  threejsboiler.prototype._run = function() {
     this.clock = new THREE.Clock();
-    setup();
-    createUI(this);
-    resetScene(this.scene, this.renderer);
-
-    // run!
-    this.resetScene = resetScene;
-    this.animate = animate;
+    this.setup(this.scene, this.camera, this.renderer);
+    // apply any changes to camera
+    this.camera.updateProjectionMatrix();
+    this.createUI(this);
+    this.resetScene(this.scene, this.renderer, this.shaders);
     this.renderFrame();
-
-    this.self = this;
   }
 
   threejsboiler.prototype._reset = function() {
@@ -61,14 +72,14 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
     // clear out scene
     this.scene = new THREE.Scene();
 
-    this.resetScene(this.scene, this.renderer);
+    this.resetScene(this.scene, this.renderer, this.shaders);
   }
 
   threejsboiler.prototype.renderFrame = function() {
     requestAnimationFrame(this.renderFrame.bind(this));
     this.stats.begin();
 
-    this.animate(this.scene);
+    this.animate(this.scene, this.clock);
 
     this.renderer.render(this.scene, this.camera);
 

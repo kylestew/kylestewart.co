@@ -2,17 +2,21 @@
   max-width: 960px;
   margin: 0 auto;
 
-  border-top: 12px solid $text-color;
+  // border-top: 12px solid $text-color;
 
   .cell {
     width: 100%;
     position: relative;
     overflow: hidden;
+    margin-bottom: 1em;
 
     background-color: "red";
 
     @include breakpoint($v-ipad) {
-      width: 50%;
+      width: 48%;
+      padding: 1%;
+      padding-top: 0.5%;
+      padding-bottom: 0.5%;
       float: left;
     }
 
@@ -43,12 +47,12 @@
   }
 }
 
-div.bottom-border {
-  clear: both;
-  border-top: 12px solid $text-color;
-  margin: 0 auto;
-  max-width: 960px;
-}
+// div.bottom-border {
+//   clear: both;
+//   border-top: 12px solid $text-color;
+//   margin: 0 auto;
+//   max-width: 960px;
+// }
 
 .no-touchevents {
   .portfolio_grid {
