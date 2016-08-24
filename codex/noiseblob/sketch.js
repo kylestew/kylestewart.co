@@ -24,7 +24,7 @@ define(function(require) {
     camera.fov = 65;
     camera.position.z = 1000;
 
-    http://codepen.io/kylestew/pen/jAYRbq
+    // http://codepen.io/kylestew/pen/jAYRbq
   }
 
   function loadShaders(shaderLoader) {

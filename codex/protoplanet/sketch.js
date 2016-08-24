@@ -1,11 +1,13 @@
 define(function(require) {
   require('lib/dat.gui.min');
+  var THREE = require('lib/three.min');
 
   // constants
   const WIDTH = 64;
   const PARTICLES = WIDTH * WIDTH;
 
   // scene objects
+  var geometry, material;
   var gpuCompute;
   var velocityVariable, positionVariable;
   var velocityUniforms, positionUniforms;
@@ -24,9 +26,9 @@ define(function(require) {
     randVelocity: 0.001
   };
   function updateDynamicParams() {
-    // velocityUniforms.gravityConstant.value = params.gravityConstant;
-    // velocityUniforms.density.value = params.density;
-    // particleUniforms.density.value = params.density;
+    velocityUniforms.gravityConstant.value = params.gravityConstant;
+    velocityUniforms.density.value = params.density;
+    particleUniforms.density.value = params.density;
   }
   function createUI(sketch) {
     var gui = new dat.GUI();
@@ -62,41 +64,33 @@ define(function(require) {
     shaderLoader.load('computeShaderVelocity', 'velocity', 'simulation');
   }
 
-  function resetScene(scene, renderer, shaders) {
+  function resetScene(scene, camera, renderer, shaders) {
     // compute renderer
-    var GPUComputationRenderer = require('codex/GPUComputationRenderer');
+    var GPUComputationRenderer = require('lib/GPUComputationRenderer');
     gpuCompute = new GPUComputationRenderer(WIDTH, WIDTH, renderer);
 
     var dtPosition = gpuCompute.createTexture();
     var dtVelocity = gpuCompute.createTexture();
     fillTextures(dtPosition, dtVelocity);
 
-    velocityVariable = gpuCompute.addVariable("textureVelocity", shaders.simulationShaders.computeShaderVelocity, dtVelocity);
-    positionVariable = gpuCompute.addVariable("texturePosition", shaders.simulationShaders.computeShaderPosition, dtPosition);
+    velocityVariable = gpuCompute.addVariable("textureVelocity", shaders.simulationShaders.velocity, dtVelocity);
+    positionVariable = gpuCompute.addVariable("texturePosition", shaders.simulationShaders.position, dtPosition);
 
-    // gpuCompute.setVariableDependencies(velocityVariable, [ positionVariable, velocityVariable ]);
-    // gpuCompute.setVariableDependencies(positionVariable, [ positionVariable, velocityVariable ]);
+    gpuCompute.setVariableDependencies(velocityVariable, [ positionVariable, velocityVariable ]);
+    gpuCompute.setVariableDependencies(positionVariable, [ positionVariable, velocityVariable ]);
 
+    // keep handle to compute uniforms
     positionUniforms = positionVariable.material.uniforms;
     velocityUniforms = velocityVariable.material.uniforms;
+    velocityUniforms.gravityConstant = { value: 0.0 };
+    velocityUniforms.density = { value: 0.0 };
 
-    // velocityUniforms.gravityConstant = { value: 0.0 };
-    // velocityUniforms.density = { value: 0.0 };
+    var error = gpuCompute.init();
+    if ( error !== null ) {
+        console.error( error );
+    }
 
-    // var error = gpuCompute.init();
-    // if ( error !== null ) {
-    //     console.error( error );
-    // }
-
-
-    // reset?
-    // gpuCompute.renderTexture( dtPosition, positionVariable.renderTargets[ 0 ] );
-    // gpuCompute.renderTexture( dtPosition, positionVariable.renderTargets[ 1 ] );
-    // gpuCompute.renderTexture( dtVelocity, velocityVariable.renderTargets[ 0 ] );
-    // gpuCompute.renderTexture( dtVelocity, velocityVariable.renderTargets[ 1 ] );
-
-
-    initProtoplanets(scene, shaders);
+    initProtoplanets(scene, camera, shaders);
 
     updateDynamicParams();
   }
@@ -163,37 +157,38 @@ define(function(require) {
     }
   }
 
-  function initProtoplanets(scene, shaders) {
-    var geometry = new THREE.BufferGeometry();
+  function initProtoplanets(scene, camera, shaders) {
+    geometry = new THREE.BufferGeometry();
 
     var positions = new Float32Array(PARTICLES * 3);
     var p = 0;
+    // TODO: Do these matter?
     for (var i = 0; i < PARTICLES; i++) {
       positions[p++] = (Math.random() * 2 - 1) * params.radius;
       positions[p++] = 0;
       positions[p++] = (Math.random() * 2 - 1) * params.radius;
     }
 
-    var uvs = new Float32Array(PARTICLES * 2);
+    var uvs = new Float32Array( PARTICLES * 2 );
     p = 0;
-    for (var j = 0; j < WIDTH; j++) {
-      for (var i = 0; i < WIDTH; i++) {
-        uvs[p++] = i / (WIDTH - 1);
-        uvs[p++] = j / (WIDTH - 1);
+    for ( var j = 0; j < WIDTH; j++ ) {
+      for ( var i = 0; i < WIDTH; i++ ) {
+        uvs[ p++ ] = i / ( WIDTH - 1 );
+        uvs[ p++ ] = j / ( WIDTH - 1 );
       }
     }
 
     geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.addAttribute('uv', new THREE.BufferAttribute(uvs, 3));
+    geometry.addAttribute('uv', new THREE.BufferAttribute(uvs, 2));
 
     particleUniforms = {
-      // texturePosition: { value: null },
-      // textureVelocity: { value: null },
-      // cameraConstant: { value: getCameraConstant(camera) },
-      // density: { value: 0.0 }
+      texturePosition: { value: null },
+      textureVelocity: { value: null },
+      cameraConstant: { value: getCameraConstant(camera) },
+      density: { value: 0.0 }
     }
 
-    var material = new THREE.ShaderMaterial({
+    material = new THREE.ShaderMaterial({
       uniforms: particleUniforms,
       vertexShader: shaders.vertexShaders.particles,
       fragmentShader: shaders.fragmentShaders.particles,
@@ -207,14 +202,13 @@ define(function(require) {
     scene.add(particles);
   }
 
+  function getCameraConstant(camera) {
+    // ???
+    return window.innerHeight / ( Math.tan( THREE.Math.DEG2RAD * 0.5 * camera.fov ) / camera.zoom );
+  }
+
   function animate() {
-//     var now = performance.now();
-// var delta = (now - last) / 1000;
-//
-// if (delta > 1) delta = 1; // safety cap on large deltas
-// last = now;
-//
-// gpuCompute.compute();
+    gpuCompute.compute();
 
     // feed compute shader output to particle shader
     particleUniforms.texturePosition.value = gpuCompute.getCurrentRenderTarget(positionVariable).texture;

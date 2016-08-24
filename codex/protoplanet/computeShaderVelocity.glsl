@@ -1,5 +1,11 @@
 
 
 void main() {
-  gl_FragColor = vec4(0, 0, 0, 0);
+  vec2 uv = gl_FragCoord.xy / resolution.xy;
+
+  vec4 tmpVel = texture2D(textureVelocity, uv);
+  vec3 vel = tmpVel.xyz;
+  float mass = tmpVel.w;
+
+  gl_FragColor = vec4(vel, mass);
 }

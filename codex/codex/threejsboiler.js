@@ -1,4 +1,4 @@
-define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitControls', 'lib/canvas-toBlob', 'lib/filesaver.min', 'lib/ShaderLoader'], function(threejs, _, stats, orbit, blob, fs, ShaderLoader) {
+define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/filesaver.min', 'lib/ShaderLoader', 'lib/OrbitControls'], function(THREE, _, stats, blob, fs, ShaderLoader, OrbitControls) {
 
   // some helpers
   Math.radians = function(degrees) {
@@ -62,7 +62,7 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
     // apply any changes to camera
     this.camera.updateProjectionMatrix();
     this.createUI(this);
-    this.resetScene(this.scene, this.renderer, this.shaders);
+    this.resetScene(this.scene, this.camera, this.renderer, this.shaders);
     this.renderFrame();
   }
 
@@ -72,7 +72,7 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/OrbitContro
     // clear out scene
     this.scene = new THREE.Scene();
 
-    this.resetScene(this.scene, this.renderer, this.shaders);
+    this.resetScene(this.scene, this.camera, this.renderer, this.shaders);
   }
 
   threejsboiler.prototype.renderFrame = function() {
