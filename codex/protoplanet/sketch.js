@@ -162,11 +162,9 @@ define(function(require) {
 
     var positions = new Float32Array(PARTICLES * 3);
     var p = 0;
-    // TODO: Do these matter?
-    for (var i = 0; i < PARTICLES; i++) {
-      positions[p++] = (Math.random() * 2 - 1) * params.radius;
+    // positions aren't used, but are needed to fire shader
+    for (var i = 0; i < PARTICLES * 3; i++) {
       positions[p++] = 0;
-      positions[p++] = (Math.random() * 2 - 1) * params.radius;
     }
 
     var uvs = new Float32Array( PARTICLES * 2 );
@@ -203,7 +201,6 @@ define(function(require) {
   }
 
   function getCameraConstant(camera) {
-    // ???
     return window.innerHeight / ( Math.tan( THREE.Math.DEG2RAD * 0.5 * camera.fov ) / camera.zoom );
   }
 
