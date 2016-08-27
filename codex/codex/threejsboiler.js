@@ -1,4 +1,4 @@
-define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/filesaver.min', 'lib/ShaderLoader', 'lib/OrbitControls'], function(THREE, _, stats, blob, fs, ShaderLoader, OrbitControls) {
+define(['lib/three', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/filesaver.min', 'lib/ShaderLoader', 'lib/OrbitControls'], function(THREE, _, stats, blob, fs, ShaderLoader, OrbitControls) {
 
   // some helpers
   Math.radians = function(degrees) {
@@ -79,7 +79,7 @@ define(['lib/three.min', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBl
     requestAnimationFrame(this.renderFrame.bind(this));
     this.stats.begin();
 
-    this.animate(this.scene, this.clock);
+    this.animate(this.scene, this.camera, this.renderer, this.clock);
 
     this.renderer.render(this.scene, this.camera);
 

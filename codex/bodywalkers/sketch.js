@@ -12,18 +12,27 @@ define(function(require) {
     shape: "circle",
 
     // points
-    count: 400,
+    count: 3000,
     weight: 1.0,
-    strength: 20, // 0 - 100
+    strength: 40, // 0 - 100
 
     // style
-    backColor: '#000000',
+    backColor: '#121212',
     color0: '#88b1be',
-    color1: '#ff0000',
-    repeat: 2,
+    color1: '#d9718f',
+    repeat: 4,
 
-    // walking
-    noiseBias: 0.466,
+    // walkers
+    bias: 0.466,
+    multiply: 2.0,
+    stride: 0.01,
+    speed: 0.0001,
+    indexMult: 0.2,
+    lod: 4.0,
+    falloff: 0.65,
+
+    // post
+    fade: 0,
   };
   var createUI = function(sketch, p5) {
     var gui = new dat.GUI();
@@ -33,16 +42,32 @@ define(function(require) {
       resetShape();
     });
 
-    var points = gui.addFolder('Points');
-    points.add(params, 'count').min(10).max(1000).step(1);
+    var points = gui.addFolder('Points (must reset)');
+    points.add(params, 'count').min(10).max(10000);
     points.add(params, 'weight').min(0.1).max(3);
     points.add(params, 'strength').min(0).max(100);
+    // points.open();
 
-    var style = gui.addFolder('Style');
+    var style = gui.addFolder('Style (must reset)');
     style.addColor(params, 'backColor');
     style.addColor(params, 'color0');
     style.addColor(params, 'color1');
-    style.add(params, 'repeat').min(1).max(8).step(1);
+    style.add(params, 'repeat').min(0).max(64).step(1);
+    // style.open();
+
+    var walks = gui.addFolder('Walkers');
+    walks.add(params, 'bias').min(0).max(1);
+    walks.add(params, 'multiply').min(0).max(10);
+    walks.add(params, 'stride').min(0).max(0.1);
+    walks.add(params, 'speed').min(0).max(0.1);
+    walks.add(params, 'indexMult').min(0).max(1.0);
+    walks.add(params, 'lod').min(0).max(32);
+    walks.add(params, 'falloff').min(0).max(1.0);
+    walks.open();
+
+    var post = gui.addFolder('Post');
+    post.add(params, 'fade').min(0).max(10);
+    // post.open();
 
     sketch.addResetToGUI(gui, params);
     sketch.addSaveToGUI(gui, params);
@@ -65,18 +90,15 @@ define(function(require) {
     // convert to point objects and apply colors
     points = [];
 
-// TODO: colors
-  //   // select color from palette (index based on noise)
-  //   var cn = (int)(100*pal.length*noise(idx))%pal.length;
-  //   stroke(pal[cn]);
-
     var col0 = _p5.color(params.color0);
     var col1 = _p5.color(params.color1);
 
     for (var i = 0; i < dots.length; i++) {
 
       var ang = _p5.map(i, 0, dots.length, 0, params.repeat * 2 * Math.PI);
-      var col = _p5.lerpColor(col0, col1, Math.sin(ang));
+      var col = col0;
+      if (params.repeat > 0)
+        col = _p5.lerpColor(col0, col1, Math.sin(ang));
 
       var point = {
         x: dots[i].x,
@@ -90,6 +112,8 @@ define(function(require) {
   var reset = function(p5) {
     p5.background(params.backColor);
     p5.noStroke();
+
+    p5.noiseSeed(p5.random() * 100);
 
     // make centered draw square with borders - for dramatic effect
     if (p5.width > p5.height) {
@@ -106,6 +130,17 @@ define(function(require) {
   }
 
   var draw = function(p5) {
+    p5.noiseDetail(params.lod, params.falloff);
+
+    // apply optional fade
+    if (params.fade > 0) {
+      p5.noStroke();
+      var back = p5.color(params.backColor);
+      var col = p5.color(p5.red(back), p5.green(back), p5.blue(back), params.fade);
+      p5.fill(col);
+      p5.rect(0, 0, p5.width, p5.height);
+    }
+
     // center drawing
     p5.translate(p5.width / 2, p5.height / 2);
     p5.rotate(params.shape.orientation);
@@ -119,12 +154,15 @@ define(function(require) {
       p5.ellipse(p.x, p.y, params.weight);
 
       // apply noise
-      // TODO: perlin noise displaying nasty semetry
-      p.x += 20.0 * (p5.noise(p.x, p.y, time) - params.noiseBias);
-      p.y += 20.0 * (p5.noise(p.x, p.y, time) - params.noiseBias);
+      // I realize there are a crazy amount of factors here
+      // it just happened, not planned
+      var idxFactor = p5.map(i, 0, points.length, 0, 32 * Math.PI);
+      idxFactor = params.indexMult * p5.sin(idxFactor);
+      p.x += params.multiply * (p5.noise(p.x * params.stride + idxFactor, time, time) - params.bias);
+      p.y += params.multiply * (p5.noise(time, p.y * params.stride + idxFactor, time) - params.bias);
     }
 
-    // time += 0.001;
+    time += params.speed;
   }
 
   var p5Boiler = require('codex/p5boiler');
