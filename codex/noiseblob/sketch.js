@@ -130,14 +130,14 @@ define(function(require) {
     camera.lookAt( new THREE.Vector3() );
 
     // update uniforms
-    uniforms.ambientMaterialColor.value = new THREE.Color(params.material);
+    // uniforms.ambientMaterialColor.value = new THREE.Color(params.material);
 
-    uniforms.shininess.value = params.shininess;
+    // uniforms.shininess.value = params.shininess;
 
-    uniforms.Time.value = time * params.speed;
-    uniforms.Stride.value = params.stride;
-    uniforms.Multiply.value = params.multiply;
-    uniforms.NormalsMix.value = params.normalsMix;
+    // uniforms.Time.value = time * params.speed;
+    // uniforms.Stride.value = params.stride;
+    // uniforms.Multiply.value = params.multiply;
+    // uniforms.NormalsMix.value = params.normalsMix;
   }
 
   var threejsboiler = require('codex/threejsboiler');

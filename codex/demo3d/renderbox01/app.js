@@ -1,9 +1,8 @@
 define(function(require) {
-  require('lib/three.min');
+  var THREE = require('lib/three');
   require('lib/stats.min');
   require('lib/OrbitControls');
   require('lib/OBJLoader');
-
 
   // boilerplate constants
   var CAM_FOV = 72;
@@ -102,7 +101,7 @@ define(function(require) {
 
   function animate() {
     requestAnimationFrame(animate);
-    if (stats) stats.begin();
+    // if (stats) stats.begin();
 
     var time = clock.getElapsedTime() * 0.4;
 
@@ -121,7 +120,7 @@ define(function(require) {
     lights.rotation.x = Math.sin(time) * 4;
 
     renderer.render(scene, camera);
-    if (stats) stats.end();
+    // if (stats) stats.end();
   }
 
   // === BOILERPLATE ===
@@ -153,8 +152,8 @@ define(function(require) {
       var orbit = new THREE.OrbitControls(camera, renderer.domElement);
     }
     // stats
-    stats = new Stats();
-    document.body.appendChild(stats.dom);
+    // stats = new Stats();
+    // document.body.appendChild(stats.dom);
   }
 
   // some helpers

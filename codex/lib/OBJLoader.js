@@ -5,7 +5,7 @@
 define(function(require, exports, module) {
 
 
-  require( 'lib/three.min' );
+  var THREE = require( './three' );
 THREE.OBJLoader = function ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;

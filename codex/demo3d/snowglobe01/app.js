@@ -1,7 +1,7 @@
 define(function(require) {
-  require('lib/three.min');
+  var THREE = require('lib/three');
   require('lib/underscore-min');
-  require('lib/stats.min');
+  var Stats = require('lib/stats.min');
   require('lib/OrbitControls');
 
   /* TODO TODO TODO

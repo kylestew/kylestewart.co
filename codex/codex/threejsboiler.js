@@ -61,7 +61,8 @@ define(['lib/three', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob',
     this.setup(this.scene, this.camera, this.renderer);
     // apply any changes to camera
     this.camera.updateProjectionMatrix();
-    this.createUI(this);
+    if (this.createUI)
+      this.createUI(this);
     this.resetScene(this.scene, this.camera, this.renderer, this.shaders);
     this.renderFrame();
   }

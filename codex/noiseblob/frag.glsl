@@ -27,7 +27,5 @@ void main() {
 
 	// color += 0.9 * texture2D(matcap, vSEM).xyz;
 
-	cat
-
 	gl_FragColor = vec4(color, 1.0);
 }
