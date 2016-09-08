@@ -8,12 +8,15 @@ define(['lib/three', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob',
     return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
   };
 
-  function threejsboiler(setup, createUI, resetScene, animate, loadShaders) {
+  function threejsboiler(setup, createUI, resetScene, animate, extras) {
     this.self = this;
     this.setup = setup;
     this.createUI = createUI;
     this.resetScene = resetScene;
     this.animate = animate;
+
+    this.loadShader = extras.loadShaders;
+    this.prepareEffectComposer = extras.prepareEffectComposer;
 
     // prep scene and camera
     var w = window.innerWidth;
@@ -45,12 +48,12 @@ define(['lib/three', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob',
     this.stats.dom.style.cssText="position:fixed;bottom:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";
     document.body.appendChild(this.stats.dom);
 
-    if (loadShaders) {
+    if (this.loadShaders) {
       this.shaders = new ShaderLoader('.', '../codex/shaderchunks');
       this.shaders.shaderSetLoaded = function() {
         self._run();
       }
-      loadShaders(this.shaders);
+      this.loadShaders(this.shaders);
     } else {
       this._run();
     }
@@ -64,6 +67,8 @@ define(['lib/three', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob',
     if (this.createUI)
       this.createUI(this);
     this.resetScene(this.scene, this.camera, this.renderer, this.shaders);
+    if (this.prepareEffectComposer)
+      this.effectComposer = this.prepareEffectComposer(this.scene, this.camera, this.renderer);
     this.renderFrame();
   }
 
@@ -74,6 +79,8 @@ define(['lib/three', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob',
     this.scene = new THREE.Scene();
 
     this.resetScene(this.scene, this.camera, this.renderer, this.shaders);
+    if (this.prepareEffectComposer)
+      this.effectComposer = this.prepareEffectComposer(this.scene, this.camera, this.renderer);
   }
 
   threejsboiler.prototype.renderFrame = function() {
@@ -82,7 +89,12 @@ define(['lib/three', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob',
 
     this.animate(this.scene, this.camera, this.renderer, this.clock);
 
-    this.renderer.render(this.scene, this.camera);
+    if (this.effectComposer) {
+      this.renderer.clear();
+      this.effectComposer.render(0.01);
+    } else {
+      this.renderer.render(this.scene, this.camera);
+    }
 
     this.stats.end();
   }
