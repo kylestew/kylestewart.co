@@ -17,7 +17,8 @@ define(['p5', 'lib/underscore-min', 'lib/stats.min', 'lib/canvas-toBlob', 'lib/f
         document.body.appendChild(self.stats.dom);
 
         setup(_p5);
-        setupUI(self, _p5);
+        if (setupUI)
+          setupUI(self, _p5);
         reset(_p5);
       };
 

@@ -1,12 +1,13 @@
 define([
-  'codex/threejsboiler', 'lib/three', 'effects/EffectComposer', 'effects/ShaderPass', 'shaders/CopyShader', 'effects/RenderPass', 'effects/BloomPass', 'shaders/ConvolutionShader', 'shaders/BokehShader', 'effects/BokehPass', 'shaders/FXAAShader', 'effects/FilmPass'
-], function(Sketch, THREE, EffectComposer, ShaderPass, CopyShader, RenderPass, BloomPass, ConvolutionShader, BokehShader, BokehPass, FXAAShader, FilmPass) {
+  'codex/threejsboiler', 'lib/three', 'effects/EffectComposer', 'effects/ShaderPass', 'shaders/CopyShader', 'effects/RenderPass', 'effects/BloomPass', 'shaders/ConvolutionShader', 'shaders/BokehShader', 'effects/BokehPass', 'shaders/FXAAShader', 'effects/FilmPass', 'lib/SimplexNoise'
+], function(Sketch, THREE, EffectComposer, ShaderPass, CopyShader, RenderPass, BloomPass, ConvolutionShader, BokehShader, BokehPass, FXAAShader, FilmPass, SimplexNoise) {
 
   // constants
 
   // scene objects
   var geometry;
   var mesh, particles;
+  var noise = new SimplexNoise();
 
   function setup(scene, camera, renderer) {
     camera.fov = 50;
@@ -24,7 +25,7 @@ define([
     widthSegments = Math.max( 3, Math.floor( widthSegments ) || 8 );
     heightSegments = Math.max( 2, Math.floor( heightSegments ) || 6 );
 
-    var geometry = new THREE.Geometry();
+    geometry = new THREE.Geometry();
     var vertices = [];
     var index = 0;
     for (var y = 0; y <= heightSegments; y++) {
@@ -107,14 +108,14 @@ define([
 
     // we are inside an icosahedron!
     // gives a subtle gradient backdrop
-    var geometry = new THREE.IcosahedronGeometry(75, 1);
+    var geom = new THREE.IcosahedronGeometry(75, 1);
     var material = new THREE.MeshStandardMaterial({
       color: 0x0f0f0f,
       roughness: 0.5,
       metalness: 0.5,
       side: THREE.BackSide,
     });
-    var ico = new THREE.Mesh(geometry, material);
+    var ico = new THREE.Mesh(geom, material);
     scene.add(ico);
 
     // sphere mesh
@@ -141,10 +142,20 @@ define([
   function animate(scene, camera, renderer, clock) {
     var time = clock.getElapsedTime();
 
-    mesh.rotation.x = particles.rotation.x += 0.001;
-  	mesh.rotation.y = particles.rotation.y += 0.005;
+    mesh.rotation.x = particles.rotation.x += 0.0001;
+  	mesh.rotation.y = particles.rotation.y += 0.0005;
 
-    // TODO: update vertice positions
+    // noise up the verts
+    time /= 2.0;
+    for (var idx in geometry.vertices) {
+      var vert = geometry.vertices[idx];
+
+      var n = 0.08 * (noise.noise3d(time + vert.x / 20, time + vert.y / 20, time + vert.z / 20) + 0);
+      vert.x += n;
+      vert.y += n;
+      vert.z += n;
+    }
+    geometry.verticesNeedUpdate = true;
   }
 
   var sketch = new Sketch(setup, null, resetScene, animate, {
