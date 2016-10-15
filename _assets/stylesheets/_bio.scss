@@ -63,4 +63,47 @@
       font-size: 3.0em;
     }
   }
+  p.bio_body_2 {
+    text-align: center;
+
+    font-size: 1.2em;
+    line-height: 1.4em;
+    padding-top: 1.4em;
+    @include breakpoint($v-ipad) {
+      font-size: 1.4em;
+    }
+    @include breakpoint($v-desktop) {
+      font-size: 2.0em;
+    }
+  }
+
+  ul.social_links {
+    text-align: center;
+
+    @include breakpoint($v-ipad) {
+      right: 1em;
+    }
+
+    margin: 0; padding: 0;
+    list-style-type: none;
+
+    li {
+      display: inline;
+      font-size: 3.2em;
+      line-height: 1.7em;
+
+      a {
+        padding: 0.1em;
+        @include breakpoint($v-ipad) {
+          padding: 0.3em;
+        }
+      }
+    }
+
+    li.text_link {
+      font-size: 1.5em;
+      padding-left: 1em;
+      padding-bottom: 2px;
+    }
+  }
 }
